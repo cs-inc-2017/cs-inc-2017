@@ -1,1 +1,1 @@
-void printBitmap(const byte* bmp, int x, int y, int w, int h);
+void printBitmap(const unsigned char* bmp, int x, int y, int w, int h);

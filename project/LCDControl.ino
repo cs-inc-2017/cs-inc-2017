@@ -10,6 +10,8 @@
 #define LCD_C     LOW
 #define LCD_D     HIGH
 
+#include "ascii.h"
+
 void LcdClear(void)
 {
   for (int index = 0; index < LCD_X * LCD_Y / 8; index++)
@@ -61,6 +63,25 @@ void printBitmap(const byte* bmp, int x, int y, int w, int h)
       LcdWrite(LCD_D, bmp[i + j*w]);
     }
     goTo(x, y + j);
+  }
+}
+
+void LcdCharacter(char character)
+{
+  LcdWrite(LCD_D, 0x00);
+  for (int index = 0; index < 5; index++)
+  {
+    LcdWrite(LCD_D, ASCII[character - 0x20][index]);
+  }
+  LcdWrite(LCD_D, 0x00);
+}
+
+void printString(char* string, int x, int y)
+{
+  goTo(x, y)
+  while (*string)
+  {
+    LcdCharacter(*string++);
   }
 }
 
