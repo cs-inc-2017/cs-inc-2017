@@ -1,22 +1,27 @@
+// define screen's pins
+
 #define PIN_SCE   7
 #define PIN_RESET 6
 #define PIN_DC    5
 #define PIN_SDIN  4
 #define PIN_SCLK  3
 
+// define useful constants related to the display
 #define LCD_X     84
 #define LCD_Y     48
 #define LCD_CMD   0
 #define LCD_C     LOW
 #define LCD_D     HIGH
 
+// include ascii hex symbols
 #include "ascii.h"
 
+// clears the screen
 void LcdClear(void)
 {
   for (int index = 0; index < LCD_X * LCD_Y / 8; index++)
   {
-    LcdWrite(LCD_D, 0x00);
+    LcdWrite(LCD_D, 0x00); // write blank bits everywhere
   }
 }
 
@@ -45,43 +50,48 @@ void LcdWrite(byte dc, byte data)
 {
   digitalWrite(PIN_DC, dc);
   digitalWrite(PIN_SCE, LOW);
-  shiftOut(PIN_SDIN, PIN_SCLK, MSBFIRST, data);
+  shiftOut(PIN_SDIN, PIN_SCLK, MSBFIRST, data); // write data to selected pin
   digitalWrite(PIN_SCE, HIGH);
 }
 
+// change cursor to the (x, y*8) pixel
 void goTo(int x, int y)
 {
   LcdWrite(LCD_CMD, 0x40 | y);
   LcdWrite(LCD_CMD, 0x80 | x);
 }
 
+// prints a bimap starting at the (x, y*8) pixel with given width and height
 void printBitmap(const byte* bmp, int x, int y, int w, int h)
 {
   for(int j = 0; j < h; j++) {
     for(int i = 0; i < w; i++) {
       goTo(x+i, y+j);
-      LcdWrite(LCD_D, bmp[i + j*w]);
+      LcdWrite(LCD_D, bmp[i + j*w]); // write hex symbol
     }
     goTo(x, y + j);
   }
 }
 
-void LcdCharacter(char character)
+// print character from ascii table
+void printCharacter(char character)
 {
-  LcdWrite(LCD_D, 0x00);
+  LcdWrite(LCD_D, 0x00); // blank line at the left
   for (int index = 0; index < 5; index++)
   {
     LcdWrite(LCD_D, ASCII[character - 0x20][index]);
   }
-  LcdWrite(LCD_D, 0x00);
+  LcdWrite(LCD_D, 0x00); // blank line at the right
 }
 
+
+// print string at given position
 void printString(char* string, int x, int y)
 {
-  goTo(x, y)
+  goTo(x, y);
   while (*string)
   {
-    LcdCharacter(*string++);
+    printCharacter(*string++);
   }
 }
 
