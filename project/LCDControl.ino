@@ -69,7 +69,6 @@ void printBitmap(const byte* bmp, int x, int y, int w, int h)
       goTo(x+i, y+j);
       LcdWrite(LCD_D, bmp[i + j*w]); // write hex symbol
     }
-    goTo(x, y + j);
   }
 }
 
