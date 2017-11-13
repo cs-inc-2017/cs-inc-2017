@@ -1,5 +1,5 @@
 #define SerialPC Serial
-#define SerialBluetooth Serial1
+#define SerialBluetooth Serial2
 #define ledPin 13
 
 String NEXT_DIRECTION_CHANGE = String("NEXT_DIRECTION_CHANGE");
@@ -66,13 +66,22 @@ void writeSerialBluetooth(String string) {
 
 void readSerialBluetooth() {
   while(SerialBluetooth.available()) {
-    bluetoothMessageBuffer+=char(SerialBluetooth.read());
-    
+    char readChar = char(SerialBluetooth.read());
+    if (bluetoothMessageBuffer != "" || readChar == '$') {
+      if (bluetoothMessageBuffer == "") {
+        SerialPC.println("");
+      }
+      bluetoothMessageBuffer += readChar;
+    } else {
+      SerialPC.print(readChar);
+    }
+
+    // Break if last char is ;
     if (
-      bluetoothMessageBuffer.length() >= 4 &&
-      bluetoothMessageBuffer.substring(bluetoothMessageBuffer.length() - 4) == " END"
+      bluetoothMessageBuffer.length() >= 1 &&
+      bluetoothMessageBuffer.substring(bluetoothMessageBuffer.length() - 1) == ";"
     ) {
-      lastBluetoothMessage = bluetoothMessageBuffer.substring(0, bluetoothMessageBuffer.length() - 4);
+      lastBluetoothMessage = bluetoothMessageBuffer;
       bluetoothMessageBuffer = "";
       SerialPC.println("Bluetooth > " + lastBluetoothMessage);
       break;
@@ -82,13 +91,20 @@ void readSerialBluetooth() {
 
 void processBluetoothCommand() {
   String command = lastBluetoothMessage;
-  if (command != "" && command.substring(0, 4) == "SET ") {
-    command = command.substring(4);
-    if (command.substring(0, NEXT_DIRECTION_CHANGE.length()) == NEXT_DIRECTION_CHANGE) {
-      nextDirectionChange = command.substring(NEXT_DIRECTION_CHANGE.length() + 1);
-      lastBluetoothMessage = "";
-      SerialPC.println("SET NEXT_DIRECTION_CHANGE = " + nextDirectionChange);
+  if (command != "" && command.substring(command.length() - 1) == ";") {
+    SerialPC.println("Bluetooth > " + command);
+    // $poi,1000,r,2,135,0;
+    if (command.substring(1, 4) == "poi") {
+      int distance, sortie, angle, erreur;
+      char type;
+      sscanf(command.c_str(), "$poi,%d,%c,%d,%d,%d;", &distance, &type, &sortie, &angle, &erreur);
+      SerialPC.println(distance);
+      SerialPC.println(sortie);
+      SerialPC.println(angle);
+      SerialPC.println(erreur);
+      SerialPC.println(type);
     }
+    lastBluetoothMessage = "";
   }
 }
 
