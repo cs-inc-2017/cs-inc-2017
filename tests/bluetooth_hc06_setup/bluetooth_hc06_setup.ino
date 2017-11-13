@@ -5,14 +5,19 @@
 String NEXT_DIRECTION_CHANGE = String("NEXT_DIRECTION_CHANGE");
 
 /* Global variables */
-String lastBluetoothMessage;
+String lastBluetoothMessage = "";
 String bluetoothMessageBuffer = "";
 
-String nextDirectionChange = "";
-String nextDirectionChangeDistance = "";
-String distanceToDestination = "";
-String timeToDestination = "";
-String errorLevel = "";
+float target_latitude;
+float target_longitude;
+float current_latitude;
+float current_longitude;
+
+int nextDirectionChange;
+int nextDirectionChangeDistance;
+int distanceToDestination;
+int timeToDestination;
+int errorLevel;
 String text = "";
 String bluetoothStatus = "";
 
@@ -20,8 +25,10 @@ void readSerialBluetooth();
 void writeSerialBluetooth();
 void processBluetoothCommand(String command);
 
-void setup()
-{
+void setup() {
+  // this is the magic trick for scanf to support float
+  asm(".global _scanf_float");
+  
   /* Init led */
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, HIGH);
@@ -32,7 +39,7 @@ void setup()
 
   /* Setup bluetooth module */
   writeSerialBluetooth(String("AT"));
-  delay(1000);
+  delay(1000); // let the bluetooth module process the command
   writeSerialBluetooth(String("AT+NAMEINC_Group3"));
   delay(1000);
   writeSerialBluetooth(String("AT+PIN4242"));
@@ -40,21 +47,6 @@ void setup()
 }
 
 void loop() {
-  /*
-  while(Serial.available()) {//while there is data available on the serial monitor
-    message+=char(Serial.read());//store string from serial command
-  }
-  if(!SerialPC.available()) {//This comes from the console
-    if(message!="") {//if data is available
-      SerialPC.println("<" + message); //show the data
-      SerialBluetooth.write(message.c_str());
-      if(message=="L0") digitalWrite(ledPin, LOW);    // set the LED off
-      if(message=="L1") digitalWrite(ledPin, HIGH);    // set the LED on
-      message=""; //clear the data
-    }
-  }
-  */
-
   readSerialBluetooth();
   processBluetoothCommand();
 }
@@ -92,17 +84,24 @@ void readSerialBluetooth() {
 void processBluetoothCommand() {
   String command = lastBluetoothMessage;
   if (command != "" && command.substring(command.length() - 1) == ";") {
-    SerialPC.println("Bluetooth > " + command);
     // $poi,1000,r,2,135,0;
     if (command.substring(1, 4) == "poi") {
-      int distance, sortie, angle, erreur;
-      char type;
+      int distance, sortie, angle, erreur; char type;
       sscanf(command.c_str(), "$poi,%d,%c,%d,%d,%d;", &distance, &type, &sortie, &angle, &erreur);
-      SerialPC.println(distance);
-      SerialPC.println(sortie);
-      SerialPC.println(angle);
-      SerialPC.println(erreur);
-      SerialPC.println(type);
+      SerialPC.print("Distance: "); SerialPC.println(distance);
+      SerialPC.print("Sortie: "); SerialPC.println(sortie);
+      SerialPC.print("Angle :"); SerialPC.println(angle);
+      SerialPC.print("Erreur: "); SerialPC.println(erreur);
+      SerialPC.print("Type: "); SerialPC.println(type);
+    } else if (command.substring(1, 4) == "pos") {
+      if (command.substring(5, 12) == "current") {
+        sscanf(command.c_str(), "$pos,current,%f,%f;", &current_latitude, &current_longitude);
+      }
+      if (command.substring(5, 11) == "target") {
+        sscanf(command.c_str(), "$pos,target,%f,%f;", &target_latitude, &target_longitude);
+      }
+      SerialPC.println(current_latitude);
+      SerialPC.println(current_longitude);
     }
     lastBluetoothMessage = "";
   }
