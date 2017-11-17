@@ -2,19 +2,15 @@
 #include "Images.h"
 // #include "bluetooth.h"
 
-#define BTN_BT 10
-#define BTN_AFF 11
+#define BTN_PIN 10
 
-int state = 0;
+int simpleDisplay = true;
 
-int BTButtonState = LOW;
-int lastBTButtonState = LOW;
-int lastBTDebounceTime = 0;
-int AFFButtonState = LOW;
-int lastAFFButtonState = LOW;
-int lastAFFDebounceTime = 0;
+unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
+unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
 
-int debounceDelay = 50;
+int buttonState;             // the current reading from the input pin
+int lastButtonState = LOW;   // the previous reading
 
 void setup(void)
 {
@@ -22,8 +18,7 @@ void setup(void)
   startBluetooth();
   
   // set pinMode for buttons
-  pinMode(BTN_BT, INPUT);
-  pinMode(BTN_AFF, INPUT);
+  pinMode(BTN_PIN, INPUT);
 
   // initialize and clear screen
   LcdInitialise();
@@ -33,26 +28,54 @@ void setup(void)
   printBitmap(left_roundabout, 0, 0, 32, 6);
   printBitmap(left_hairpin, 38, 0, 32, 6);
   //printString("Rue Joliot-Curie", 0, 4);
-
-
 }
 
 void loop(void)
 {
-  readSerialBluetooth();
-  processBluetoothCommand();
-  int BTButtonValue = digitalRead(BTN_BT);
-  
-  if(BTButtonValue != lastBTButtonState) {
-    // lastDebounceTime = millis();
+
+  /*
+   * 
+   * HANDLE BUTTON INPUT WITH DEBOUNCE
+   * 
+   */
+   
+  int reading = digitalRead(BTN_PIN); 
+    
+  if (reading != lastButtonState) {
+    // reset the debouncing timer
+    lastDebounceTime = millis();
   }
   
-  if(BTButtonValue == HIGH) {
-    //printString("Rue Joliot-Curie", 0, 4);
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    if (reading != buttonState) {
+      buttonState = reading;
+      if (buttonState == HIGH) {
+        simpleDisplay = !simpleDisplay;
+      }
+    }
+  }
+  
+  lastButtonState = reading;
+
+  /////////////////////////////////////////
+
+  if(simpleDisplay) {
+    printString("Aff. simple", 0, 5);
   }
   else {
-    //printString("Rue De Saclayyyy", 0, 4);
+    printString("Aff. detail", 0, 5);
   }
+
+  /*
+   * 
+   * Bluetooth Communication
+   * 
+   */
+  
+  readSerialBluetooth();
+  processBluetoothCommand();
+
+  //////////////////////////////////////////
 }
 
 
