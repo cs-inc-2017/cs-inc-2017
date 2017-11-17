@@ -1,10 +1,22 @@
 #include "LCDControl.h"
 #include "Images.h"
-// #include "bluetooth.h"
+#include "bluetooth.h"
 
-#define BTN_PIN 10
 
+/*
+ * STATE VARIABLE
+ */
 int simpleDisplay = true;
+int currentAngle = 0;
+int currentDistance = 0;
+int currentError = 0;
+int currentType = 0;
+int currentExit = 0;
+
+/*
+ * BUTTON VARIABLES
+ */
+#define BTN_PIN 10
 
 unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
 unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
@@ -12,6 +24,12 @@ unsigned long debounceDelay = 50;    // the debounce time; increase if the outpu
 int buttonState;             // the current reading from the input pin
 int lastButtonState = LOW;   // the previous reading
 
+
+/*
+ * 
+ * SETUP FUNCTION
+ * 
+ */
 void setup(void)
 {
 
@@ -30,6 +48,11 @@ void setup(void)
   //printString("Rue Joliot-Curie", 0, 4);
 }
 
+/*
+ * 
+ * LOOP FUNCTION
+ * 
+ */
 void loop(void)
 {
 
@@ -59,12 +82,7 @@ void loop(void)
 
   /////////////////////////////////////////
 
-  if(simpleDisplay) {
-    printString("Aff. simple", 0, 5);
-  }
-  else {
-    printString("Aff. detail", 0, 5);
-  }
+ 
 
   /*
    * 
@@ -72,13 +90,12 @@ void loop(void)
    * 
    */
 
-
-   if(simpleDisplay) { // AFFICHAGE SIMPLE
-    
+   if(simpleDisplay) {
+    printString("Aff. simple", 0, 5);
    }
-   else {              // AFFICHAGE DETAILLE
-    
-   }
+   else {
+     printString("Aff. detail", 0, 5);
+    }
 
    ////////////////////////////////////////
 
