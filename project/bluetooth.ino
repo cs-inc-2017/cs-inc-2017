@@ -1,3 +1,5 @@
+#include "bluetooth.h"
+
 #define SerialPC Serial
 #define SerialBluetooth Serial2
 #define ledPin 13
@@ -21,11 +23,8 @@ int errorLevel;
 String text = "";
 String bluetoothStatus = "";
 
-void readSerialBluetooth();
-void writeSerialBluetooth();
-void processBluetoothCommand(String command);
 
-void setup() {
+void startBluetooth() {
   // this is the magic trick for scanf to support float
   asm(".global _scanf_float");
   
@@ -46,10 +45,6 @@ void setup() {
   delay(1000);
 }
 
-void loop() {
-  readSerialBluetooth();
-  processBluetoothCommand();
-}
 
 void writeSerialBluetooth(String string) {
   SerialPC.println("Bluetooth < " + string);
@@ -106,5 +101,4 @@ void processBluetoothCommand() {
     lastBluetoothMessage = "";
   }
 }
-
 
