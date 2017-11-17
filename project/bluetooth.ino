@@ -84,10 +84,15 @@ void processBluetoothCommand() {
       int distance, sortie, angle, erreur; char type;
       sscanf(command.c_str(), "$poi,%d,%c,%d,%d,%d;", &distance, &type, &sortie, &angle, &erreur);
       SerialPC.print("Distance: "); SerialPC.println(distance);
+      currentDistance = distance;
       SerialPC.print("Sortie: "); SerialPC.println(sortie);
+      currentExit = sortie;
       SerialPC.print("Angle :"); SerialPC.println(angle);
+      currentAngle = angle;
       SerialPC.print("Erreur: "); SerialPC.println(erreur);
+      currentError = erreur;
       SerialPC.print("Type: "); SerialPC.println(type);
+      currentType = type;
     } else if (command.substring(1, 4) == "pos") {
       if (command.substring(5, 12) == "current") {
         sscanf(command.c_str(), "$pos,current,%f,%f;", &current_latitude, &current_longitude);
