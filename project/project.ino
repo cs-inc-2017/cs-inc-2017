@@ -99,6 +99,22 @@ void loop(void)
    }
    else {
     printString("Aff. detail", 0, 5);
+
+    char dst [4];
+    sprintf (dst, "%03i", currentDistance);
+    printString(dst, 0, 0);
+
+    char err [4];
+    sprintf (err, "%03i", currentError);
+    printString(err, 0, 1);
+
+    char ext [4];
+    sprintf (ext, "%03i", currentExit);
+    printString(ext, 0, 2);
+
+    char agl [4];
+    sprintf (agl, "%03i", currentAngle);
+    printString(agl, 0, 3);
    }
 
    ////////////////////////////////////////
