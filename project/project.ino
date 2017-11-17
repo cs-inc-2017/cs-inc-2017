@@ -68,6 +68,22 @@ void loop(void)
 
   /*
    * 
+   * Display
+   * 
+   */
+
+
+   if(simpleDisplay) { // AFFICHAGE SIMPLE
+    
+   }
+   else {              // AFFICHAGE DETAILLE
+    
+   }
+
+   ////////////////////////////////////////
+
+  /*
+   * 
    * Bluetooth Communication
    * 
    */
