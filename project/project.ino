@@ -74,6 +74,7 @@ void loop(void)
       buttonState = reading;
       if (buttonState == HIGH) {
         simpleDisplay = !simpleDisplay;
+        LcdClear();
       }
     }
   }
