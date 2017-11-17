@@ -30,7 +30,7 @@ void setup(void)
   LcdClear();
 
   // sample display  
- // printBitmap(left_roundabout, 0, 0, 38, 4);
+  printBitmap(left_roundabout, 0, 0, 32, 6);
   printBitmap(left_hairpin, 38, 0, 32, 6);
   //printString("Rue Joliot-Curie", 0, 4);
 
