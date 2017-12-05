@@ -92,10 +92,9 @@ void loop(void)
    */
 
    if(simpleDisplay) {
-    char buf [4];
-    sprintf (buf, "%03i", currentDistance);
-    printString(buf, 0, 0);
-    printString("Aff. simple", 0, 5);
+      printBitmap(left_hairpin, 0, 0, 32, 6);
+      printNumber(950, 33, 1);
+      printString("metres", 41, 5);
    }
    else {
     printString("Aff. detail", 0, 5);

@@ -83,7 +83,6 @@ void printCharacter(char character)
   LcdWrite(LCD_D, 0x00); // blank line at the right
 }
 
-
 // print string at given position
 void printString(char* string, int x, int y)
 {
@@ -94,4 +93,34 @@ void printString(char* string, int x, int y)
   }
 }
 
+const unsigned char* digitMapper[10] = {
+  number_0,
+  number_1,
+  number_2,
+  number_3,
+  number_4,
+  number_5,
+  number_6,
+  number_7,
+  number_8,
+  number_9,
+};
+
+void printDigit(int digit, int x, int y) {
+  printBitmap(digitMapper[digit], x, y, 17, 4);
+}
+
+void printNumber(int num, int x, int y) {
+  int rightDigit = num % 10;
+  int middleDigit = (num / 10) % 10;
+  int leftDigit = (num / 100) % 10;
+
+  printDigit(rightDigit, x + 34, y);
+  if (middleDigit != 0 || leftDigit != 0) {
+    printDigit(middleDigit, x + 17, y);
+  }
+  if (leftDigit != 0) {
+    printDigit(leftDigit, x, y);
+  }
+}
 
