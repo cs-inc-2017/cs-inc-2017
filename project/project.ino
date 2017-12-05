@@ -16,7 +16,7 @@ int currentExit = 0;
 /*
  * BUTTON VARIABLES
  */
-#define BTN_PIN 10
+#define BTN_PIN 1
 
 unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
 unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
