@@ -118,9 +118,13 @@ void printNumber(int num, int x, int y) {
   printDigit(rightDigit, x + 34, y);
   if (middleDigit != 0 || leftDigit != 0) {
     printDigit(middleDigit, x + 17, y);
+  } else {
+    printBitmap(empty_number, x + 17, y, 17, 4);
   }
   if (leftDigit != 0) {
     printDigit(leftDigit, x, y);
+  } else {
+    printBitmap(empty_number, x, y, 17, 4);
   }
 }
 
@@ -159,6 +163,14 @@ const unsigned char* chooseIntersectionToDisplay() {
   return up;
 }
 
+char* getExitInfo() {
+  if ('r' == currentType) {
+    sprintf(exitText, "%de sort", currentExit);
+    return exitText;
+  }
+  return "       ";
+}
+
 int getFormattedDistance() {
   if (currentDistance <= 999) {
     return currentDistance;
@@ -169,9 +181,25 @@ int getFormattedDistance() {
 
 char* getDistanceUnit() {
     if (currentDistance <= 999) {
-    return "metres";
+    return " metres";
   } else {
-    return "km";
+    return "  km  ";
   }
 }
 
+char* getArrivalText() {
+  sprintf(arrivalText, "%dmin %dkm", timeToDestination, distanceToDestination);
+  return arrivalText;
+}
+
+char* getTurnText() {
+  if (currentAngle < 158) {
+    strcpy (turnText, "Tournez a droite sur ");
+  } else if (currentAngle > 203) {
+    strcpy (turnText, "Tournez a gauche sur ");
+  } else {
+    strcpy (turnText, "Continuez tout droit sur ");
+  }
+  strcat(turnText, nextStreet);
+  return turnText;
+}

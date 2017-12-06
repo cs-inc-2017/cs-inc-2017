@@ -6,12 +6,21 @@
 /*
  * STATE VARIABLE
  */
+
+// TODO: change this bool:
+int hasReceivedBluetoothInfo = true;
 int simpleDisplay = true;
-int currentAngle = 0;
+int currentAngle = 57;
 int currentDistance = 0;
 int currentError = 0;
 char currentType = '\0';
 int currentExit = 0;
+char exitText [8];
+int timeToDestination = 12;
+int distanceToDestination = 7;
+char arrivalText [13];
+char turnText [37];
+char nextStreet [13] = "Joliot Curie";
 
 /*
  * BUTTON VARIABLES
@@ -91,30 +100,25 @@ void loop(void)
    * 
    */
 
+  if (hasReceivedBluetoothInfo) {
    if(simpleDisplay) {
       printBitmap(chooseIntersectionToDisplay(), 0, 0, 32, 6);
+      printString(getExitInfo(), 33, 0);
       printNumber(getFormattedDistance(), 33, 1);
-      printString(getDistanceUnit(), 41, 5);
+      printString(getDistanceUnit(), 33, 5);
    }
    else {
-    printString("Aff. detail", 0, 5);
-
-    char dst [4];
-    sprintf (dst, "%03i", currentDistance);
-    printString(dst, 0, 0);
-
-    char err [4];
-    sprintf (err, "%03i", currentError);
-    printString(err, 0, 1);
-
-    char ext [4];
-    sprintf (ext, "%03i", currentExit);
-    printString(ext, 0, 2);
-
-    char agl [4];
-    sprintf (agl, "%03i", currentAngle);
-    printString(agl, 0, 3);
+    printString("Arrivee dans", 0, 0);
+    printString(getArrivalText(), 0, 1);
+    printString(getTurnText(), 0, 3);
    }
+  } else {
+    // TODO: add bluetooth logo
+    printBitmap(bluetooth_logo, 0, 0, 32, 6);
+    printString("En ", 33, 1);
+    printString("attente", 33, 2);
+    printString("...", 33, 3);
+  }
 
    ////////////////////////////////////////
 

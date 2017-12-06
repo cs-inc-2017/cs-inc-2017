@@ -17,8 +17,6 @@ float current_longitude;
 
 int nextDirectionChange;
 int nextDirectionChangeDistance;
-int distanceToDestination;
-int timeToDestination;
 int errorLevel;
 String text = "";
 String bluetoothStatus = "";
@@ -80,6 +78,7 @@ void processBluetoothCommand() {
   String command = lastBluetoothMessage;
   if (command != "" && command.substring(command.length() - 1) == ";") {
     // $poi,1000,r,2,135,0;
+    hasReceivedBluetoothInfo = true;
     if (command.substring(1, 4) == "poi") {
       int distance, sortie, angle, erreur; char type;
       sscanf(command.c_str(), "$poi,%d,%c,%d,%d,%d;", &distance, &type, &sortie, &angle, &erreur);
