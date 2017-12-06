@@ -7,8 +7,7 @@
  * STATE VARIABLE
  */
 
-// TODO: change this bool:
-int hasReceivedBluetoothInfo = true;
+int hasReceivedBluetoothInfo = false;
 int simpleDisplay = true;
 int currentAngle = 57;
 int currentDistance = 0;
@@ -51,10 +50,10 @@ void setup(void)
   LcdInitialise();
   LcdClear();
 
-  // sample display  
-  // printBitmap(left_roundabout, 0, 0, 32, 6);
-  // printBitmap(left_hairpin, 38, 0, 32, 6);
-  // printString("Rue Joliot-Curie", 0, 4);
+  printBitmap(bike_logo, 0, 0, 84, 5);
+  printString("FindYourWay", 0, 5);
+  delay(3000);
+  LcdClear();
 }
 
 /*
@@ -113,11 +112,10 @@ void loop(void)
     printString(getTurnText(), 0, 3);
    }
   } else {
-    // TODO: add bluetooth logo
-    printBitmap(bluetooth_logo, 0, 0, 32, 6);
-    printString("En ", 33, 1);
-    printString("attente", 33, 2);
-    printString("...", 33, 3);
+      printBitmap(bluetooth_logo, 0, 0, 32, 6);
+      printString("  En   ", 33, 2);
+      printString("attente", 33, 3);
+      printString("  ...  ", 33, 4);
   }
 
    ////////////////////////////////////////
