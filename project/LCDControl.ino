@@ -163,6 +163,17 @@ const unsigned char* chooseIntersectionToDisplay() {
   return up;
 }
 
+char* getErrorText() {
+  if (currentError == 1) {
+    return "Er<100m";
+  } else if (currentError == 2) {
+    return "Er>100m";
+  } else if (currentError == 3) {
+    return "Err>1km";
+  }
+  return "";
+}
+
 char* getExitInfo() {
   if ('r' == currentType) {
     sprintf(exitText, "%de sort", currentExit);

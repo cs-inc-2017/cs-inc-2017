@@ -2,7 +2,6 @@
 #include "Images.h"
 #include "bluetooth.h"
 
-
 /*
  * STATE VARIABLE
  */
@@ -20,6 +19,8 @@ int distanceToDestination = 7;
 char arrivalText [13];
 char turnText [37];
 char nextStreet [13] = "Joliot Curie";
+unsigned long previousMillis = 0;
+int displayError = false;
 
 /*
  * BUTTON VARIABLES
@@ -93,6 +94,25 @@ void loop(void)
 
  
 
+  // Prepare error display if needed
+  if (currentError > 0) {
+    if (currentType == 'r') {
+      unsigned long currentMillis = millis();
+      if (currentMillis - previousMillis >= 1000) {
+        previousMillis = currentMillis;
+        if (displayError) {
+          displayError = false;
+        } else {
+          displayError = true;
+        }
+      }
+    } else {
+      displayError = true;
+    }
+  } else {
+    displayError = false;
+  }
+
   /*
    * 
    * Display
@@ -102,7 +122,11 @@ void loop(void)
   if (hasReceivedBluetoothInfo) {
    if(simpleDisplay) {
       printBitmap(chooseIntersectionToDisplay(), 0, 0, 32, 6);
-      printString(getExitInfo(), 33, 0);
+      if (displayError) {
+        printString(getErrorText(), 33, 0);
+      } else {
+        printString(getExitInfo(), 33, 0);
+      }
       printNumber(getFormattedDistance(), 33, 1);
       printString(getDistanceUnit(), 33, 5);
    }
