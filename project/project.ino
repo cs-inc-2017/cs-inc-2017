@@ -10,7 +10,7 @@ int simpleDisplay = true;
 int currentAngle = 0;
 int currentDistance = 0;
 int currentError = 0;
-int currentType = 0;
+char currentType = '\0';
 int currentExit = 0;
 
 /*
@@ -92,9 +92,9 @@ void loop(void)
    */
 
    if(simpleDisplay) {
-      printBitmap(left_hairpin, 0, 0, 32, 6);
-      printNumber(950, 33, 1);
-      printString("metres", 41, 5);
+      printBitmap(chooseIntersectionToDisplay(), 0, 0, 32, 6);
+      printNumber(getFormattedDistance(), 33, 1);
+      printString(getDistanceUnit(), 41, 5);
    }
    else {
     printString("Aff. detail", 0, 5);

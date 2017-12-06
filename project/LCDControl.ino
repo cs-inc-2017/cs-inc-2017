@@ -124,3 +124,54 @@ void printNumber(int num, int x, int y) {
   }
 }
 
+const unsigned char* chooseIntersectionToDisplay() {
+  if ('i' == currentType) {
+     // it is a classic intersection
+     if (currentAngle < 23) {
+        return right_uturn;
+     } else if (currentAngle >= 23 && currentAngle < 68) {
+        return right_hairpin;
+     } else if (currentAngle >= 68 && currentAngle < 113) {
+        return right;
+     } else if (currentAngle >= 113 && currentAngle < 158) {
+        return right_subtle;
+     } else if (currentAngle >= 158 && currentAngle < 203) {
+        return up;
+     } else if (currentAngle >= 203 && currentAngle < 248) {
+        return left_subtle;
+     } else if (currentAngle >= 248 && currentAngle < 293) {
+        return left;
+     } else if (currentAngle >= 293 && currentAngle < 338) {
+        return left_hairpin;
+     } else if (currentAngle >= 338) {
+        return left_uturn;
+     }
+  } else if ('r' == currentType) {
+    // it is a roundabout
+    if (currentAngle < 158) {
+      return right_roundabout;
+    } else if (currentAngle >= 158 && currentAngle < 203) {
+      return up;
+    } else if (currentAngle >= 203) {
+      return left_roundabout;
+    }
+  }
+  return up;
+}
+
+int getFormattedDistance() {
+  if (currentDistance <= 999) {
+    return currentDistance;
+  } else {
+    return currentDistance/1000;
+  }
+}
+
+char* getDistanceUnit() {
+    if (currentDistance <= 999) {
+    return "metres";
+  } else {
+    return "km";
+  }
+}
+
