@@ -194,7 +194,7 @@ char* getDistanceUnit() {
     if (currentDistance <= 999) {
     return " metres";
   } else {
-    return "  km  ";
+    return "  km   ";
   }
 }
 

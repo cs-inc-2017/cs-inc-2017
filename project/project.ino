@@ -3,7 +3,7 @@
 #include "bluetooth.h"
 
 /*
- * STATE VARIABLE
+ * STATE VARIABLES
  */
 
 int hasReceivedBluetoothInfo = false;
