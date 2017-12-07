@@ -157,6 +157,7 @@ void loop(void)
                 else {
                         printString("Arrivee dans", 0, 0);
                         printString(getArrivalText(), 0, 1);
+                        printString("            ", 0, 2);
                         printString(getTurnText(), 0, 3);
                 }
         }

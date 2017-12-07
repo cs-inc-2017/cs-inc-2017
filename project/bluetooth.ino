@@ -72,8 +72,8 @@ void processBluetoothCommand() {
                 lastBluetoothCommandMillis = millis();
                 if (command.substring(1, 4) == "poi") {
                         int distance, sortie, angle, erreur, ttd, dtd; char type;
-                        char str [16];
-                        sscanf(command.c_str(), "$poi,%d,%c,%d,%d,%d,%d,%d,%s;", &distance, &type, &sortie, &angle, &erreur, &ttd, &dtd, &str);
+                        char streetBuffer [16];
+                        sscanf(command.c_str(), "$poi,%d,%c,%d,%d,%d,%d,%d,%[^;]s;", &distance, &type, &sortie, &angle, &erreur, &ttd, &dtd, streetBuffer);
                         currentDistance = distance;
                         currentExit = sortie;
                         currentAngle = angle;
@@ -84,9 +84,9 @@ void processBluetoothCommand() {
                         }
                         timeToDestination = ttd;
                         distanceToDestination = dtd;
-                        if (strcmp(str, nextStreet) != 0) {
+                        if (strcmp(streetBuffer, nextStreet) != 0) {
                                 nextStreetNeedsRefresh = true;
-                                nextStreet = str;
+                                strcpy(nextStreet, streetBuffer);
                         }
                 } else if (command.substring(1, 4) == "pos") {
                         if (command.substring(5, 12) == "current") {
