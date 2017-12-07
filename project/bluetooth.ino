@@ -4,8 +4,6 @@
 #define SerialBluetooth Serial2
 #define ledPin 13
 
-String NEXT_DIRECTION_CHANGE = String("NEXT_DIRECTION_CHANGE");
-
 /* Global variables */
 String lastBluetoothMessage = "";
 String bluetoothMessageBuffer = "";
@@ -14,13 +12,6 @@ float target_latitude;
 float target_longitude;
 float current_latitude;
 float current_longitude;
-
-int nextDirectionChange;
-int nextDirectionChangeDistance;
-int errorLevel;
-String text = "";
-String bluetoothStatus = "";
-
 
 void startBluetooth() {
   // this is the magic trick for scanf to support float
@@ -78,20 +69,25 @@ void processBluetoothCommand() {
   String command = lastBluetoothMessage;
   if (command != "" && command.substring(command.length() - 1) == ";") {
     // $poi,1000,r,2,135,0;
-    hasReceivedBluetoothInfo = true;
+    lastBluetoothCommandMillis = millis();
     if (command.substring(1, 4) == "poi") {
-      int distance, sortie, angle, erreur; char type;
-      sscanf(command.c_str(), "$poi,%d,%c,%d,%d,%d;", &distance, &type, &sortie, &angle, &erreur);
-      SerialPC.print("Distance: "); SerialPC.println(distance);
+      int distance, sortie, angle, erreur, ttd, dtd; char type;
+      char str [16];
+      sscanf(command.c_str(), "$poi,%d,%c,%d,%d,%d,%d,%d,%s;", &distance, &type, &sortie, &angle, &erreur, &ttd, &dtd, &str);
       currentDistance = distance;
-      SerialPC.print("Sortie: "); SerialPC.println(sortie);
       currentExit = sortie;
-      SerialPC.print("Angle :"); SerialPC.println(angle);
       currentAngle = angle;
-      SerialPC.print("Erreur: "); SerialPC.println(erreur);
       currentError = erreur;
-      SerialPC.print("Type: "); SerialPC.println(type);
       currentType = type;
+      if (ttd != timeToDestination || dtd != distanceToDestination) {
+        arrivalTextNeedsRefresh = true;
+      }
+      timeToDestination = ttd;
+      distanceToDestination = dtd;
+      if (strcmp(str, nextStreet) != 0) {
+        nextStreetNeedsRefresh = true;
+        nextStreet = str;
+      }
     } else if (command.substring(1, 4) == "pos") {
       if (command.substring(5, 12) == "current") {
         sscanf(command.c_str(), "$pos,current,%f,%f;", &current_latitude, &current_longitude);
@@ -99,8 +95,6 @@ void processBluetoothCommand() {
       if (command.substring(5, 11) == "target") {
         sscanf(command.c_str(), "$pos,target,%f,%f;", &target_latitude, &target_longitude);
       }
-      SerialPC.println(current_latitude);
-      SerialPC.println(current_longitude);
     }
     lastBluetoothMessage = "";
   }

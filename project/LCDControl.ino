@@ -199,17 +199,25 @@ char* getDistanceUnit() {
 }
 
 char* getArrivalText() {
+  if (arrivalTextNeedsRefresh) {
+    arrivalTextNeedsRefresh = false;
+    return "            ";
+  }
   sprintf(arrivalText, "%dmin %dkm", timeToDestination, distanceToDestination);
   return arrivalText;
 }
 
 char* getTurnText() {
+  if (nextStreetNeedsRefresh) {
+    nextStreetNeedsRefresh = false;
+    return "                                    ";
+  }
   if (currentAngle < 158) {
     strcpy (turnText, "Tournez a droite sur ");
   } else if (currentAngle > 203) {
     strcpy (turnText, "Tournez a gauche sur ");
   } else {
-    strcpy (turnText, "Continuez tout droit sur ");
+    strcpy (turnText, "Continuez sur ");
   }
   strcat(turnText, nextStreet);
   return turnText;
